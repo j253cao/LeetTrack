@@ -1,4 +1,4 @@
-# LeetTrack
+# LeetTrack (WIP)
 
 Welcome to the LeetTrack repository! LeetTrack is a powerful tool designed to streamline and enhance your LeetCode practice experience. With LeetTrack, you can efficiently track your progress, manage your problem-solving journey, and boost your skills in coding interviews.
 
