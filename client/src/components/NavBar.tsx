@@ -22,10 +22,10 @@ export default function NavBar() {
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
             Leet Track
           </Typography>
-          <Button sx={{ marginRight: 2 }} variant="text" size="large" onClick={() => handleNavigate("login")} color="inherit">
+          <Button sx={{ marginRight: 2, ...styles.containedButtonWhite }} variant="contained" size="medium" onClick={() => handleNavigate("login")} color="inherit">
             login
           </Button>
-          <Button variant="contained" sx={{ ...styles.containedButton }} size="medium" onClick={() => handleNavigate("sign-up")} color="primary">
+          <Button variant="contained" sx={{ ...styles.containedButtonBlack }} size="medium" onClick={() => handleNavigate("sign-up")} color="primary">
             sign up
           </Button>
         </Toolbar>
