@@ -13,12 +13,19 @@ export type SignUpResponse = {
 };
 
 export const authQueries = {
-  loginUser: async (email: string, password: string): Promise<LoginResponse> => {
+  loginUser: async (
+    email: string,
+    password: string
+  ): Promise<LoginResponse> => {
     const headers = {
       "Content-Type": "application/json",
     };
     const body = JSON.stringify({ email, password });
-    const response: LoginResponse = await middleware.postQuery("auth/login", body, headers);
+    const response: LoginResponse = await middleware.postQuery(
+      "auth/login",
+      body,
+      headers
+    );
 
     return response;
   },
@@ -27,7 +34,11 @@ export const authQueries = {
     const headers = {
       "Content-Type": "application/json",
     };
-    const response: SignUpResponse = await middleware.postQuery("auth/sign-up", body, headers);
+    const response: SignUpResponse = await middleware.postQuery(
+      "auth/sign-up",
+      body,
+      headers
+    );
 
     return response;
   },
