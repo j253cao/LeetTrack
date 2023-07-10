@@ -14,13 +14,20 @@ export default function Login() {
       const jwt = localStorage.getItem("token");
       if (jwt) {
         const response = await authQueries.verifyUser(jwt!);
-        if (response) handleNavigate("home");
+        if (response) handleNavigate("home/dashboard");
       }
     };
     checkLogin();
-  }, []);
+  }, [handleNavigate]);
   return (
-    <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center" style={{ minHeight: "100vh" }}>
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      style={{ minHeight: "100vh" }}
+    >
       <LoginForm />
     </Grid>
   );

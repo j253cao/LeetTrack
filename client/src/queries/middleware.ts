@@ -14,7 +14,11 @@ const middleware = {
     }
   },
 
-  postQuery: async (route: string, body: string, headers: HeadersInit | undefined) => {
+  postQuery: async (
+    route: string,
+    body: string,
+    headers: HeadersInit | undefined
+  ) => {
     try {
       const response = await fetch(URL.concat(route), {
         method: "POST",
@@ -29,7 +33,11 @@ const middleware = {
     }
   },
 
-  deleteQuery: async (route: string, body: string, headers: HeadersInit | undefined) => {
+  deleteQuery: async (
+    route: string,
+    body: string,
+    headers: HeadersInit | undefined
+  ) => {
     try {
       const response = await fetch(URL.concat(route), {
         method: "DELETE",

@@ -8,14 +8,18 @@ const authController = {
       const { email, password } = req.body;
 
       const user = await Users.findOne({ email });
-      if (!user) return res.status(400).json({ msg: "Incorrect email or password" });
+      if (!user)
+        return res.status(400).json({ msg: "Incorrect email or password" });
 
       const correctPassword = await bcrypt.compare(password, user.password);
-      if (!correctPassword) return res.status(400).json({ msg: "Incorrect email or password" });
+      if (!correctPassword)
+        return res.status(400).json({ msg: "Incorrect email or password" });
 
       // if login is successful, create a token
       const payload = { id: user._id, email: user.email, success: true };
-      const token = jwt.sign(payload, process.env.JWT_TOKEN_SECRET, { expiresIn: "1d" });
+      const token = jwt.sign(payload, process.env.JWT_TOKEN_SECRET, {
+        expiresIn: "1d",
+      });
 
       res.json({ token, ...payload });
     } catch (error) {

@@ -1,4 +1,21 @@
 const mongoose = require("mongoose");
+const itemModel = require("./itemModel");
+
+const userSpecificModel = new mongoose.Schema(
+  {
+    problem: {
+      type: itemModel.schema,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const userSchema = new mongoose.Schema(
   {
@@ -10,6 +27,10 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+    },
+    problems: {
+      type: [userSpecificModel],
+      default: [],
     },
   },
   {

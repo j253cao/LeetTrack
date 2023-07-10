@@ -4,8 +4,12 @@ const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
 
-router.route("/").get(authenticate, itemController.getItems).post(authenticate, itemController.createItem).delete(authenticate, itemController.deleteItems);
+router
+  .route("/")
+  .get(authenticate, itemController.getUserItems)
+  .post(authenticate, itemController.createUserItem)
+  .delete(authenticate, itemController.deleteItem);
 
-router.route("/:id").put(authenticate, itemController.updateItem).delete(authenticate, itemController.deleteItem);
+router.route("/getProblemInfo").post(itemController.getProblemInfo);
 
 module.exports = router;

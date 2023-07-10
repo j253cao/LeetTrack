@@ -1,15 +1,27 @@
 const mongoose = require("mongoose");
 
+const tag = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  slug: {
+    type: String,
+    required: true,
+  },
+});
+
 const itemSchema = new mongoose.Schema(
   {
-    owner_id: {
+    questionId: {
       type: String,
-    },
-    id: {
-      type: Number,
       required: true,
     },
-    name: {
+    title: {
+      type: String,
+      required: true,
+    },
+    titleSlug: {
       type: String,
       required: true,
     },
@@ -17,18 +29,7 @@ const itemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    notes: {
-      type: String,
-      required: false,
-    },
-    tags: {
-      type: String,
-      required: false,
-    },
-    status: {
-      type: String,
-      required: true,
-    },
+    topicTags: { type: [tag], required: true, default: [] },
     link: {
       type: String,
       required: true,
