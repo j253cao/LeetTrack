@@ -1,50 +1,95 @@
 import middleware from "./middleware";
 
-type Difficulty = "Easy" | "Medium" | "Hard" | "";
-type Status = "Completed" | "In-Progress" | "Planned" | "";
-
-export interface Problem extends ProblemSubmit {
-  _id: string;
-}
-
-export interface ProblemSubmit {
-  id: number;
+export type Tag = {
   name: string;
-  difficulty: Difficulty;
-  notes: string;
-  tags: string;
-  status: Status;
+  slug: string;
+};
+
+// problem schema
+export interface ProblemInfo {
+  questionId: string;
+  title: string;
+  titleSlug: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  topicTags: Tag[];
   link: string;
 }
-type ProblemResponse = {
-  msg: string;
-  savedProblem: Problem;
-  success: boolean;
-};
 
-type FetchAllResponse = {
-  problems?: Problem[];
+interface ProblemInfoResponse {
+  problemInfo?: ProblemInfo;
   success: boolean;
-};
+  msg?: string;
+}
+
+export interface Problem {
+  problem: ProblemInfo;
+  status: string;
+  updatedAt: string;
+}
+
+//  response from querying and submiting single
+interface ProblemResponse {
+  problem?: Problem;
+  success: boolean;
+  msg?: string;
+}
+
+export interface ProblemsResponse {
+  problems: Problem[] | [];
+  success: boolean;
+  msg?: string;
+}
 
 const getHeaders = (token: string) => {
   return { "Content-Type": "application/json", "Authorization": token };
 };
 
 export const problemQueries = {
-  createProblem: async (body: ProblemSubmit, token: string): Promise<ProblemResponse> => {
-    const response: ProblemResponse = await middleware.postQuery("item/", JSON.stringify(body), getHeaders(token));
+  createProblem: async (
+    body: Problem,
+    token: string
+  ): Promise<ProblemsResponse> => {
+    const response: ProblemsResponse = await middleware.postQuery(
+      "item/",
+      JSON.stringify(body),
+      getHeaders(token)
+    );
 
     return response;
   },
-  getAllProblems: async (token: string): Promise<FetchAllResponse> => {
-    const response: FetchAllResponse = await middleware.getQuery("item/", getHeaders(token));
+  getAllProblems: async (token: string): Promise<ProblemsResponse> => {
+    const response: ProblemsResponse = await middleware.getQuery(
+      "item/",
+      getHeaders(token)
+    );
 
     return response;
   },
-  deleteAllProblems: async (ids: string[], token: string): Promise<ProblemResponse> => {
-    const response: ProblemResponse = await middleware.deleteQuery("item/", JSON.stringify(ids), getHeaders(token));
+  deleteProblem: async (
+    title: string,
+    token: string
+  ): Promise<ProblemsResponse> => {
+    const response: ProblemsResponse = await middleware.deleteQuery(
+      "item/",
+      JSON.stringify({ title }),
+      getHeaders(token)
+    );
 
+    return response;
+  },
+  getProblemInfo: async (titleSlug: string): Promise<ProblemInfoResponse> => {
+    const response: ProblemInfoResponse = await middleware.postQuery(
+      "item/getProblemInfo",
+      JSON.stringify({ titleSlug }),
+      { "Content-Type": "application/json" }
+    );
+    return response;
+  },
+  getDailyProblem: async (token: string) => {
+    const response: ProblemInfoResponse = await middleware.getQuery(
+      "item/getProblemInfo",
+      getHeaders(token)
+    );
     return response;
   },
 };
