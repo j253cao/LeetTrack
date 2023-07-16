@@ -27,13 +27,6 @@ export interface Problem {
   updatedAt: string;
 }
 
-//  response from querying and submiting single
-interface ProblemResponse {
-  problem?: Problem;
-  success: boolean;
-  msg?: string;
-}
-
 export interface ProblemsResponse {
   problems: Problem[] | [];
   success: boolean;

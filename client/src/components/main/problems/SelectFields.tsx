@@ -8,8 +8,6 @@ import {
 } from "@mui/material";
 import { capitalizeFirst } from "../../../common/functions";
 import { TbCheck } from "react-icons/tb";
-import { Problem } from "../../../queries/problemQueries";
-import { useEffect, useState } from "react";
 
 const pageStyles = {
   selectBox: {

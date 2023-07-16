@@ -1,5 +1,17 @@
-import { Alert, Backdrop, Button, Card, CardContent, CardHeader, Checkbox, CircularProgress, Snackbar, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Backdrop,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  CircularProgress,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { styles } from "../common/styles";
@@ -40,7 +52,11 @@ export default function SignUpForm() {
 
   const [loading, setLoading] = useState(false);
 
-  const [snackbars, setSnackbars] = useState<SignUpSnackBarStates>({ duplicateError: false, serverError: false, passwordValidation: false });
+  const [snackbars, setSnackbars] = useState<SignUpSnackBarStates>({
+    duplicateError: false,
+    serverError: false,
+    passwordValidation: false,
+  });
 
   const handleCreateAccount = async () => {
     setValidEmail(validateEmail(email));
@@ -54,18 +70,36 @@ export default function SignUpForm() {
         setLoading(false);
 
         if (response.success) {
-          handleNavigate("login", { state: { signUpSuccess: response.success } });
-          setSnackbars({ duplicateError: false, serverError: false, passwordValidation: false });
+          handleNavigate("login", {
+            state: { signUpSuccess: response.success },
+          });
+          setSnackbars({
+            duplicateError: false,
+            serverError: false,
+            passwordValidation: false,
+          });
         } else {
-          setSnackbars({ serverError: false, passwordValidation: false, duplicateError: true });
+          setSnackbars({
+            serverError: false,
+            passwordValidation: false,
+            duplicateError: true,
+          });
         }
       } catch (error) {
         setLoading(false);
-        setSnackbars({ duplicateError: false, passwordValidation: false, serverError: true });
+        setSnackbars({
+          duplicateError: false,
+          passwordValidation: false,
+          serverError: true,
+        });
       }
     }
     if (!validatePassword(password)) {
-      setSnackbars({ duplicateError: false, serverError: false, passwordValidation: true });
+      setSnackbars({
+        duplicateError: false,
+        serverError: false,
+        passwordValidation: true,
+      });
     }
   };
 
@@ -101,22 +135,39 @@ export default function SignUpForm() {
       </CardContent>
 
       <CardContent sx={{ display: "flex", alignItems: "center" }}>
-        <Checkbox onClick={() => setShowPassword(!showPassword)} size="small" color="default" sx={{ padding: 0, marginRight: 1 }} />
+        <Checkbox
+          onClick={() => setShowPassword(!showPassword)}
+          size="small"
+          color="default"
+          sx={{ padding: 0, marginRight: 1 }}
+        />
         <Typography fontSize={14}>Show password</Typography>
       </CardContent>
 
       <CardContent sx={{ display: "flex", alignItems: "center" }}>
-        <Button onClick={() => handleNavigate("login")} variant="text" size="small">
+        <Button
+          onClick={() => handleNavigate("login")}
+          variant="text"
+          size="small"
+        >
           Login
         </Button>
-        <Button onClick={handleCreateAccount} variant="text" size="medium" sx={buttonStyle} color="primary">
+        <Button
+          onClick={handleCreateAccount}
+          variant="text"
+          size="medium"
+          sx={buttonStyle}
+          color="primary"
+        >
           Create Account
         </Button>
       </CardContent>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={snackbars.passwordValidation}
-        onClose={() => setSnackbars({ ...snackbars, passwordValidation: false })}
+        onClose={() =>
+          setSnackbars({ ...snackbars, passwordValidation: false })
+        }
         autoHideDuration={3000}
         message="Password must be 8-24 characters long. Must include one letter (a-z, A-Z) and one number (0-9)."
       />
@@ -130,12 +181,20 @@ export default function SignUpForm() {
           Account with this email already exists!
         </Alert>
       </Snackbar>
-      <Snackbar onClose={() => setSnackbars({ ...snackbars, serverError: false })} anchorOrigin={{ vertical: "bottom", horizontal: "center" }} open={snackbars.serverError} autoHideDuration={3000}>
+      <Snackbar
+        onClose={() => setSnackbars({ ...snackbars, serverError: false })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={snackbars.serverError}
+        autoHideDuration={3000}
+      >
         <Alert severity="error" sx={{ width: "100%" }}>
           There was an error processing your request!
         </Alert>
       </Snackbar>
-      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
         <CircularProgress color="inherit" />
       </Backdrop>
     </Card>
