@@ -13,14 +13,26 @@ export default function Login() {
     const checkLogin = async () => {
       const jwt = localStorage.getItem("token");
       if (jwt) {
-        const response = await authQueries.verifyUser(jwt!);
-        if (response) handleNavigate("home");
+        const response = await authQueries.verifyUser(jwt);
+
+        if (response.success) {
+          localStorage.setItem("token", response.token);
+
+          handleNavigate("home/dashboard");
+        }
       }
     };
     checkLogin();
-  }, []);
+  }, [handleNavigate]);
   return (
-    <Grid container spacing={0} direction="column" alignItems="center" justifyContent="center" style={{ minHeight: "100vh" }}>
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      style={{ minHeight: "100vh" }}
+    >
       <LoginForm />
     </Grid>
   );
