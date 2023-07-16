@@ -53,11 +53,17 @@ const authController = {
 
         const user = await Users.findById(verified.id);
         if (!user) return res.send(false);
-
-        res.send(true);
+        const token = jwt.sign(
+          { id: user._id, email: user.email, success: true },
+          process.env.JWT_TOKEN_SECRET,
+          {
+            expiresIn: "1d",
+          }
+        );
+        res.json({ token, success: true });
       });
     } catch (error) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: err.message, success: false });
     }
   },
 };

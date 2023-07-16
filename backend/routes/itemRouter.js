@@ -10,6 +10,9 @@ router
   .post(authenticate, itemController.createUserItem)
   .delete(authenticate, itemController.deleteItem);
 
-router.route("/getProblemInfo").post(itemController.getProblemInfo);
+router
+  .route("/getProblemInfo")
+  .post(itemController.getProblemInfo)
+  .get(itemController.getDailyProblem);
 
 module.exports = router;

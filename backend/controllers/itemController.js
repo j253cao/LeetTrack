@@ -18,8 +18,6 @@ const itemController = {
         })
       );
 
-      console.log(user.problems);
-
       res.json({ problems: result, success: true });
     } catch (error) {
       console.log(error);
@@ -39,7 +37,6 @@ const itemController = {
 
       if (existingProblem !== -1) {
         if (user.problems[existingProblem].status !== itemToSave.status) {
-          console.log("asd");
           user.problems[existingProblem] = itemToSave;
         }
       } else {
@@ -134,6 +131,40 @@ const itemController = {
       console.log(error);
       return res.status(500).json({ msg: error.message, success: false });
     }
+  },
+  getDailyProblem: async (req, res) => {
+    const query = `query questionOfToday{
+      activeDailyCodingChallengeQuestion{
+          question{
+            questionId
+            title
+            titleSlug
+            difficulty
+            topicTags {
+                name
+                slug
+            }}
+      }
+  }`;
+
+    const response = await request(LEETCODE_ENDPOINT, query);
+
+    if (!response)
+      return res.status(400).json({
+        msg: `"No daily found.`,
+        success: false,
+      });
+
+    const newProblemInfo = {
+      ...response.activeDailyCodingChallengeQuestion.question,
+      link: `https://leetcode.com/problems/${response.activeDailyCodingChallengeQuestion.question.titleSlug}/`,
+    };
+
+    return res.status(200).json({
+      problemInfo: newProblemInfo,
+      success: true,
+      msg: "Successfully retrieved problem info.",
+    });
   },
 };
 module.exports = itemController;

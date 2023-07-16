@@ -15,7 +15,11 @@ import Dashboard from "../components/main/Dashboard";
 import { capitalizeFirst } from "../common/functions";
 import Problems from "../components/main/Problems";
 import NewProblem from "../components/main/NewProblem";
-import { Problem, problemQueries } from "../queries/problemQueries";
+import {
+  Problem,
+  ProblemInfo,
+  problemQueries,
+} from "../queries/problemQueries";
 
 const pageStyles = {
   container: {
@@ -43,7 +47,7 @@ export default function Home() {
   const location = useLocation();
 
   const handleNavigate = (route: string) => {
-    navigate("/home/" + route);
+    navigate("/" + route);
   };
 
   const pageName = location.pathname.slice(
@@ -58,16 +62,32 @@ export default function Home() {
     []
   );
   const [problemsList, setProblemsList] = useState<Problem[]>([]);
+  const [dailyProblem, setDailyProblem] = useState<ProblemInfo>();
 
   useEffect(() => {
     const fetchProblems = async () => {
       setDataLoading(true);
       const jwt = localStorage.getItem("token");
       if (!jwt) return;
-      const response = await problemQueries.getAllProblems(jwt);
-      if (!response.success) return;
-      setConstantProblemsList(response.problems);
-      setProblemsList(response.problems);
+      const getAllProblems = problemQueries.getAllProblems(jwt);
+      const getDailyProblem = problemQueries.getDailyProblem(jwt);
+      try {
+        const [allProblems, dailyProblem] = await Promise.allSettled([
+          getAllProblems,
+          getDailyProblem,
+        ]);
+
+        if (allProblems.status === "fulfilled") {
+          setConstantProblemsList(allProblems.value.problems);
+          setProblemsList(allProblems.value.problems);
+        }
+
+        if (dailyProblem.status === "fulfilled") {
+          setDailyProblem(dailyProblem.value.problemInfo);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchProblems();
     setDataLoading(false);
@@ -99,7 +119,14 @@ export default function Home() {
         </Box>
 
         <Box marginTop={3}>
-          {location.pathname === "/home/dashboard" && <Dashboard />}
+          {location.pathname === "/home/dashboard" &&
+            dailyProblem &&
+            constantProblemsList && (
+              <Dashboard
+                dailyProblem={dailyProblem}
+                constantProblemsList={constantProblemsList}
+              />
+            )}
           {location.pathname === "/home/problems" && (
             <Problems
               selectStatusField={selectStatusField}

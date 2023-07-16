@@ -39,6 +39,7 @@ const SearchBar = memo(
     return (
       <TextField
         variant="filled"
+        placeholder="search"
         size="medium"
         value={searchFilter}
         onChange={(e) => handleSearchFilter(e.target.value)}

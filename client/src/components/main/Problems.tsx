@@ -1,9 +1,6 @@
-import { Box, Button, Grid, InputAdornment } from "@mui/material";
+import { Box, Button, Grid, Pagination } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { TiArrowUnsorted } from "react-icons/ti";
-import { FiSearch } from "react-icons/fi";
-import MuiTextField from "@mui/material/TextField";
-import { styled } from "@mui/material/styles";
 
 import { colors, styles } from "../../common/styles";
 import SelectFields from "./problems/SelectFields";
@@ -72,7 +69,13 @@ const pageStyles = {
   },
 };
 
-const SortFields = () => {
+const SortFields = ({
+  ascendingFilter,
+  setAscendingFilter,
+}: {
+  ascendingFilter: [string, boolean];
+  setAscendingFilter: React.Dispatch<React.SetStateAction<[string, boolean]>>;
+}) => {
   const fieldMap: Map<string, number> = new Map();
   fieldMap.set("status", 1);
   fieldMap.set("title", 3);
@@ -80,12 +83,21 @@ const SortFields = () => {
   fieldMap.set("difficulty", 2);
   fieldMap.set("last updated", 2);
 
+  const handleSetAscendingFilter = (property: string, value: boolean): void => {
+    setAscendingFilter([property, value]);
+  };
   return (
     <Grid container spacing={2}>
       {Array.from(fieldMap.keys()).map((field) => (
         <Grid key={field} item xs={fieldMap.get(field)}>
           {field !== "tags" ? (
-            <Button disableRipple sx={pageStyles.pageButtons}>
+            <Button
+              disableRipple
+              onClick={() =>
+                handleSetAscendingFilter(field, !ascendingFilter[1])
+              }
+              sx={pageStyles.pageButtons}
+            >
               {field}
               <TiArrowUnsorted style={{ padding: 0 }} />
             </Button>
@@ -153,7 +165,6 @@ export default function Problems(props: ProblemsProps) {
     let problems = props.constantProblemsList.filter((problem) => {
       return searchProblem(problem, filters.search);
     });
-    console.log(problems);
 
     problems = problems.filter((problem) => {
       if (filters.status !== "" && filters.difficulty !== "") {
@@ -176,8 +187,76 @@ export default function Problems(props: ProblemsProps) {
     setFilters((prev) => ({ ...prev, search: target }));
   };
   const [searchFilter, setSearchFilter] = useState("");
+  const [ascendingFilter, setAscendingFilter] = useState<[string, boolean]>([
+    "",
+    false,
+  ]);
+
+  useEffect(() => {
+    const property = ascendingFilter[0];
+    const value = ascendingFilter[1];
+    if (property === "") return;
+
+    const sortDirection = value ? 1 : -1; // Set sort direction based on value
+
+    if (property === "status") {
+      props.setProblemsList((prevProblems) =>
+        prevProblems
+          .slice()
+          .sort((a, b) => a.status.localeCompare(b.status) * sortDirection)
+      );
+      return;
+    }
+
+    if (property === "last updated") {
+      props.setProblemsList((prevProblems) =>
+        prevProblems
+          .slice()
+          .sort(
+            (a, b) => a.updatedAt.localeCompare(b.updatedAt) * sortDirection
+          )
+      );
+      return;
+    }
+
+    if (property === "title") {
+      props.setProblemsList((prevProblems) =>
+        prevProblems.slice().sort((a, b) => {
+          const substringA = a.problem.title.substr(
+            a.problem.title.indexOf(" ") + 1
+          );
+          const substringB = b.problem.title.substr(
+            b.problem.title.indexOf(" ") + 1
+          );
+          return substringA.localeCompare(substringB) * sortDirection;
+        })
+      );
+      return;
+    }
+
+    if (property === "difficulty") {
+      const difficultyOrder = {
+        Easy: 0,
+        Medium: 1,
+        Hard: 2,
+      };
+      props.setProblemsList((prevProblems) =>
+        prevProblems
+          .slice()
+          .sort(
+            (a, b) =>
+              (difficultyOrder[a.problem.difficulty] -
+                difficultyOrder[b.problem.difficulty]) *
+              sortDirection
+          )
+      );
+      return;
+    }
+  }, [ascendingFilter]);
+  const [pageNumber, setPageNumber] = useState(1);
+  console.log(props.constantProblemsList);
   return (
-    <Box>
+    <Box sx={{ background: colors.background }}>
       <Box display={"flex"} alignItems={"center"}>
         <SelectFields
           selectStatusField={props.selectStatusField}
@@ -203,19 +282,32 @@ export default function Problems(props: ProblemsProps) {
           </Button>
         </Box>
       </Box>
-      <Box sx={pageStyles.filterContainer}>
-        <SortFields />
+      <Box marginBottom={2} sx={pageStyles.filterContainer}>
+        <SortFields
+          ascendingFilter={ascendingFilter}
+          setAscendingFilter={setAscendingFilter}
+        />
       </Box>
       <Box>
-        {props.problemsList.map((problem) => {
-          return (
-            <Problem
-              key={problem.problem.title}
-              handleDeleteProblem={handleDeleteProblem}
-              problem={problem}
-            />
-          );
-        })}
+        {props.problemsList
+          .slice((pageNumber - 1) * 10, pageNumber * 10)
+          .map((problem) => {
+            return (
+              <Problem
+                key={problem.problem.title}
+                handleDeleteProblem={handleDeleteProblem}
+                problem={problem}
+              />
+            );
+          })}
+      </Box>
+      <Box padding={2} display={"flex"}>
+        <Pagination
+          onChange={(event, page) => setPageNumber(page)}
+          count={Math.ceil(props.constantProblemsList.length / 10)}
+          shape="rounded"
+          sx={{ margin: "auto" }}
+        />
       </Box>
     </Box>
   );

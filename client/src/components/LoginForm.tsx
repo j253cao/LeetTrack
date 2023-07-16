@@ -1,4 +1,16 @@
-import { Alert, Backdrop, Button, Card, CardContent, CardHeader, Checkbox, CircularProgress, Snackbar, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Backdrop,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  CircularProgress,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -22,7 +34,9 @@ export default function LoginForm() {
 
   const [password, setPassword] = useState("");
   const [validLogin, setValidLogin] = useState(true);
-  const [validLoginSnackbar, setValidLoginSnackbar] = useState<[boolean, string]>([false, ""]);
+  const [validLoginSnackbar, setValidLoginSnackbar] = useState<
+    [boolean, string]
+  >([false, ""]);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -52,7 +66,7 @@ export default function LoginForm() {
       setValidLogin(response.success);
     } else {
       setValidLogin(false);
-      setValidLoginSnackbar([true, "Invalid email or passowrd"]);
+      setValidLoginSnackbar([true, "Invalid email or passoword"]);
     }
   };
 
@@ -88,30 +102,58 @@ export default function LoginForm() {
       </CardContent>
 
       <CardContent sx={{ display: "flex", alignItems: "center" }}>
-        <Checkbox onClick={() => setShowPassword(!showPassword)} size="small" color="default" sx={{ padding: 0, marginRight: 1 }} />
+        <Checkbox
+          onClick={() => setShowPassword(!showPassword)}
+          size="small"
+          color="default"
+          sx={{ padding: 0, marginRight: 1 }}
+        />
         <Typography fontSize={14}>Show password</Typography>
       </CardContent>
 
       <CardContent sx={{ display: "flex", alignItems: "center" }}>
-        <Button onClick={() => handleNavigate("sign-up")} variant="text" size="small">
+        <Button
+          onClick={() => handleNavigate("sign-up")}
+          variant="text"
+          size="small"
+        >
           Create Account
         </Button>
-        <Button onClick={handleLogin} variant="text" size="medium" sx={buttonStyle} color="primary">
+        <Button
+          onClick={handleLogin}
+          variant="text"
+          size="medium"
+          sx={buttonStyle}
+          color="primary"
+        >
           Login
         </Button>
       </CardContent>
-      <Snackbar onClose={() => setSignUpSuccess(false)} anchorOrigin={{ vertical: "bottom", horizontal: "center" }} open={signUpSuccess} autoHideDuration={3000}>
+      <Snackbar
+        onClose={() => setSignUpSuccess(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={signUpSuccess}
+        autoHideDuration={3000}
+      >
         <Alert severity="success" sx={{ width: "100%" }}>
           Successfully sign up!
         </Alert>
       </Snackbar>
-      <Snackbar onClose={() => setValidLoginSnackbar([false, ""])} anchorOrigin={{ vertical: "bottom", horizontal: "center" }} open={validLoginSnackbar[0]} autoHideDuration={3000}>
+      <Snackbar
+        onClose={() => setValidLoginSnackbar([false, ""])}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={validLoginSnackbar[0]}
+        autoHideDuration={3000}
+      >
         <Alert severity="error" sx={{ width: "100%" }}>
           {validLoginSnackbar[1]}
         </Alert>
       </Snackbar>
 
-      <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
         <CircularProgress color="inherit" />
       </Backdrop>
     </Card>

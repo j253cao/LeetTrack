@@ -5,6 +5,7 @@ import { Problem as ProblemType } from "../../../queries/problemQueries";
 import { AiOutlineMinusCircle, AiOutlineDelete } from "react-icons/ai";
 import { BsCheck2Circle } from "react-icons/bs";
 import { colors } from "../../../common/styles";
+import { formatRelativeTime } from "../../../common/functions";
 export default function Problem({
   problem,
   handleDeleteProblem,
@@ -26,48 +27,8 @@ export default function Problem({
     return difficulty.toLowerCase() as "easy" | "medium" | "hard";
   };
 
-  const getMonthAsString = (month: number): string => {
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
 
-    return months[month - 1];
-  };
 
-  const formatDate = (date: Date) => {
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = getMonthAsString(date.getMonth() + 1);
-    const year = date.getFullYear().toString().slice(-2);
-
-    return `${day} ${month} ${year}`;
-  };
-
-  const formatRelativeTime = (date: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-
-    if (diff < 24 * 60 * 60 * 1000) {
-      const hours = Math.floor(diff / (60 * 60 * 1000));
-      if (hours === 0) {
-        const minutes = Math.floor(diff / (60 * 1000));
-        return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
-      }
-      return `${hours} hour${hours === 1 ? "" : "s"} ago`;
-    }
-
-    return formatDate(date);
-  };
 
   return (
     <Grid container spacing={2}>

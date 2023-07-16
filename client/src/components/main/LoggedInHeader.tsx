@@ -41,6 +41,10 @@ export default function LoggedInHeader({
   handleNavigate: HandleNavigate;
   location: string;
 }) {
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    handleNavigate("");
+  };
   return (
     <AppBar position="static" sx={styles.headerContainer}>
       <Box id="content-container" sx={styles.contentContainer}>
@@ -54,7 +58,9 @@ export default function LoggedInHeader({
             <Button
               disableRipple
               onClick={() =>
-                handleNavigate(page === "dashboard" ? "dashboard" : "problems")
+                handleNavigate(
+                  page === "dashboard" ? "home/dashboard" : "home/problems"
+                )
               }
               key={page}
               sx={{
@@ -79,7 +85,12 @@ export default function LoggedInHeader({
             width: "40%",
           }}
         >
-          <Button disableRipple disableFocusRipple sx={styles.pageButtons}>
+          <Button
+            onClick={handleSignOut}
+            disableRipple
+            disableFocusRipple
+            sx={styles.pageButtons}
+          >
             Sign Out
           </Button>
         </Box>

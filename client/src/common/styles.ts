@@ -5,7 +5,7 @@ export const colors = {
   background: "#F7FBFF",
   defaultFont: "#626262",
   light: "#b1b1b1",
-  buttonBackground: "#2c7be5;",
+  buttonBackground: "#2c7be5",
   easy: "#00b8A3",
   medium: "#FFC01E",
   hard: "#FF375F",

@@ -85,4 +85,11 @@ export const problemQueries = {
     );
     return response;
   },
+  getDailyProblem: async (token: string) => {
+    const response: ProblemInfoResponse = await middleware.getQuery(
+      "item/getProblemInfo",
+      getHeaders(token)
+    );
+    return response;
+  },
 };

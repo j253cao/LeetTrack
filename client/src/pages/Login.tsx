@@ -13,8 +13,13 @@ export default function Login() {
     const checkLogin = async () => {
       const jwt = localStorage.getItem("token");
       if (jwt) {
-        const response = await authQueries.verifyUser(jwt!);
-        if (response) handleNavigate("home/dashboard");
+        const response = await authQueries.verifyUser(jwt);
+
+        if (response.success) {
+          localStorage.setItem("token", response.token);
+          console.log("asd");
+          handleNavigate("home/dashboard");
+        }
       }
     };
     checkLogin();
