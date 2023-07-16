@@ -2,10 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const authRouter = require("./routes/authRouter");
 const itemRouter = require("./routes/itemRouter");
-
 const app = express();
 
 app.use(express.json());
@@ -26,6 +26,12 @@ try {
 } catch (error) {
   throw error;
 }
+
+app.get("*", (_, res) => {
+  res.sendFile(path.join(__dirname, "../client/public/index.html"), (err) => {
+    if (err) res.status(500).send(err);
+  });
+});
 
 // Listen Server
 const PORT = process.env.PORT || 5000;
