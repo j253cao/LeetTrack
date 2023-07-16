@@ -11,4 +11,4 @@ Statistics and Analytics: LeetTrack generates insightful statistics and analytic
 
 Personalized Collections: LeetTrack allows you to create and manage personalized collections of problems. You can group problems by topic, difficulty, or any other criteria that suits your needs, making it easier to focus on specific areas of improvement.
 
-[Check it out here!](#https://leet-track-frontend.vercel.app/)
+[Link Check it out here!](#https://leet-track-frontend.vercel.app/)
