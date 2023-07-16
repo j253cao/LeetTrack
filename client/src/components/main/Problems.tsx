@@ -254,7 +254,7 @@ export default function Problems(props: ProblemsProps) {
     }
   }, [ascendingFilter]);
   const [pageNumber, setPageNumber] = useState(1);
-  console.log(props.constantProblemsList);
+
   return (
     <Box sx={{ background: colors.background }}>
       <Box display={"flex"} alignItems={"center"}>

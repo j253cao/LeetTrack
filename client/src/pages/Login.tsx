@@ -17,7 +17,7 @@ export default function Login() {
 
         if (response.success) {
           localStorage.setItem("token", response.token);
-          console.log("asd");
+
           handleNavigate("home/dashboard");
         }
       }
