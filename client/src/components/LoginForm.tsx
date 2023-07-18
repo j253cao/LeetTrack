@@ -62,7 +62,7 @@ export default function LoginForm() {
     if (response.success) {
       localStorage.setItem("token", response.token!);
 
-      handleNavigate("home");
+      handleNavigate("home/dashboard");
       setValidLogin(response.success);
     } else {
       setValidLogin(false);
