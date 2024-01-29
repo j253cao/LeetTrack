@@ -23,7 +23,7 @@ export default function Login() {
       }
     };
     checkLogin();
-  }, [handleNavigate]);
+  }, []);
   return (
     <Grid
       container

@@ -6,7 +6,6 @@ import { GoGraph } from "react-icons/go";
 import { TbStairsUp } from "react-icons/tb";
 import { Fade } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { authQueries } from "../queries/authQueries";
 
 const pageStyles = {
   container: {
@@ -68,18 +67,7 @@ export default function Landing() {
     navigate(route);
   };
   const checkLogin = async () => {
-    const jwt = localStorage.getItem("token");
-    if (jwt) {
-      const response = await authQueries.verifyUser(jwt);
-
-      if (response.success) {
-        localStorage.setItem("token", response.token);
-
-        handleNavigate("home/dashboard");
-      }
-    } else {
-      handleNavigate("/login");
-    }
+    handleNavigate("/login");
   };
   return (
     <Fade timeout={1000} in={true}>
