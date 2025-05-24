@@ -1,16 +1,15 @@
-import { AppBar, Box, Button } from "@mui/material";
+import { AppBar, Box, Button, Typography } from "@mui/material";
 import React from "react";
 import { colors } from "../../common/styles";
 import { capitalizeFirst } from "../../common/functions";
 
 const styles = {
   headerContainer: {
-    background: colors.white,
-    borderBottom: "solid",
-    borderWidth: 1,
-    borderColor: colors.superLight,
-    boxShadow: "none",
-    height: 65,
+    background: "rgba(255, 255, 255, 0.95)",
+    backdropFilter: "blur(10px)",
+    borderBottom: "1px solid rgba(44, 123, 229, 0.1)",
+    boxShadow: "0px 4px 12px rgba(44, 123, 229, 0.05)",
+    height: 70,
     display: "flex",
     alignItems: "center",
   },
@@ -23,17 +22,45 @@ const styles = {
   },
   pageButtons: {
     "color": colors.defaultFont,
-    "&:hover": { background: colors.white, color: colors.black },
-    "borderRadius": 0,
+    "fontSize": "1.1em",
+    "fontWeight": 500,
+    "padding": "8px 16px",
+    "borderRadius": "8px",
     "textTransform": "none",
     "minHeight": "100%",
     "marginRight": 2,
-    "padding": 0,
+    "transition": "all 0.2s ease-in-out",
+    "&:hover": {
+      background: "rgba(44, 123, 229, 0.05)",
+      color: "#2c7be5",
+    },
+  },
+  logo: {
+    fontSize: "1.8em",
+    fontWeight: 700,
+    background: "linear-gradient(45deg, #2c7be5 30%, #17bcde 90%)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    letterSpacing: "-1px",
+  },
+  signOutButton: {
+    "color": "#2c7be5",
+    "fontSize": "1em",
+    "fontWeight": 500,
+    "padding": "8px 16px",
+    "borderRadius": "8px",
+    "textTransform": "none",
+    "transition": "all 0.2s ease-in-out",
+    "&:hover": {
+      background: "rgba(44, 123, 229, 0.05)",
+    },
   },
 };
+
 type HandleNavigate = (route: string) => void;
 
 const pages = ["dashboard", "problems"];
+
 export default function LoggedInHeader({
   handleNavigate,
   location,
@@ -45,6 +72,7 @@ export default function LoggedInHeader({
     localStorage.removeItem("token");
     handleNavigate("");
   };
+
   return (
     <AppBar position="static" sx={styles.headerContainer}>
       <Box id="content-container" sx={styles.contentContainer}>
@@ -52,6 +80,7 @@ export default function LoggedInHeader({
           sx={{
             display: { xs: "none", md: "flex" },
             width: "40%",
+            gap: 1,
           }}
         >
           {pages.map((page) => (
@@ -65,19 +94,21 @@ export default function LoggedInHeader({
               key={page}
               sx={{
                 ...styles.pageButtons,
-                borderBottom:
+                background:
                   location.slice(location.indexOf("/", 1) + 1) === page
-                    ? { borderBottom: `solid ${colors.black} 1px` }
-                    : {},
+                    ? "rgba(44, 123, 229, 0.1)"
+                    : "transparent",
+                color:
+                  location.slice(location.indexOf("/", 1) + 1) === page
+                    ? "#2c7be5"
+                    : colors.defaultFont,
               }}
             >
               {capitalizeFirst(page)}
             </Button>
           ))}
         </Box>
-        <Box sx={{ color: colors.black, alignContent: "center" }}>
-          LeetTrack
-        </Box>
+        <Typography sx={styles.logo}>LeetTrack</Typography>
         <Box
           sx={{
             display: "flex",
@@ -89,7 +120,7 @@ export default function LoggedInHeader({
             onClick={handleSignOut}
             disableRipple
             disableFocusRipple
-            sx={styles.pageButtons}
+            sx={styles.signOutButton}
           >
             Sign Out
           </Button>

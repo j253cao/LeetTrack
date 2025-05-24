@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Pagination } from "@mui/material";
+import { Box, Button, Grid, Pagination, useMediaQuery } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { TiArrowUnsorted } from "react-icons/ti";
 
@@ -138,14 +138,7 @@ export default function Problems(props: ProblemsProps) {
     }
   };
 
-  const handleDeleteProblem = async (title: string) => {
-    const jwt = localStorage.getItem("token");
-    if (!jwt) return;
-    const response = await problemQueries.deleteProblem(title, jwt);
-    if (!response.success) return;
-    props.setConstantProblemsList(response.problems);
-    props.setProblemsList(response.problems);
-  };
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const [filters, setFilters] = useState<{
     status: string;
@@ -181,6 +174,40 @@ export default function Problems(props: ProblemsProps) {
     });
     props.setProblemsList(problems);
   }, [filters]);
+
+  useEffect(() => {
+    setPageNumber(1);
+  }, [filters]);
+
+  const handleDeleteProblem = async (title: string) => {
+    const jwt = localStorage.getItem("token");
+    if (!jwt) return;
+    const response = await problemQueries.deleteProblem(title, jwt);
+    if (!response.success) return;
+    props.setConstantProblemsList(response.problems);
+    props.setProblemsList(response.problems);
+    const newLength = response.problems
+      .filter((problem) => {
+        return searchProblem(problem, filters.search);
+      })
+      .filter((problem) => {
+        if (filters.status !== "" && filters.difficulty !== "") {
+          return (
+            problem.status.toLowerCase() === filters.status &&
+            problem.problem.difficulty.toLowerCase() === filters.difficulty
+          );
+        } else if (filters.status !== "") {
+          return problem.status.toLowerCase() === filters.status;
+        } else if (filters.difficulty !== "") {
+          return (
+            problem.problem.difficulty.toLowerCase() === filters.difficulty
+          );
+        }
+        return problem;
+      }).length;
+    const maxPage = Math.max(1, Math.ceil(newLength / 20));
+    if (pageNumber > maxPage) setPageNumber(maxPage);
+  };
 
   const handleSearchFilter = (target: string) => {
     setSearchFilter(target);
@@ -257,14 +284,18 @@ export default function Problems(props: ProblemsProps) {
 
   return (
     <Box sx={{ background: colors.background }}>
-      <Box display={"flex"} alignItems={"center"}>
+      <Box display={isMobile ? "block" : "flex"} alignItems={"center"}>
         <SelectFields
           selectStatusField={props.selectStatusField}
           handleSelectStatusField={handleSelectStatusField}
           selectDifficultyField={props.selectDifficultyField}
           handleSelectDifficultyField={handleSelectDifficultyField}
         />
-        <Box marginLeft={"auto"} display={"flex"}>
+        <Box
+          marginLeft={isMobile ? 0 : "auto"}
+          display={"flex"}
+          mt={isMobile ? 2 : 0}
+        >
           <SearchBar
             handleSearchFilter={handleSearchFilter}
             searchFilter={searchFilter}
@@ -277,6 +308,7 @@ export default function Problems(props: ProblemsProps) {
               setFilters({ status: "", difficulty: "", search: "" });
             }}
             sx={{ ...styles.defaultContainedButton, marginLeft: 5 }}
+            aria-label="Clear all filters"
           >
             Clear Filters
           </Button>
@@ -289,24 +321,31 @@ export default function Problems(props: ProblemsProps) {
         />
       </Box>
       <Box>
-        {props.problemsList
-          .slice((pageNumber - 1) * 10, pageNumber * 10)
-          .map((problem) => {
-            return (
-              <Problem
-                key={problem.problem.title}
-                handleDeleteProblem={handleDeleteProblem}
-                problem={problem}
-              />
-            );
-          })}
+        {props.problemsList.length === 0 ? (
+          <Box py={6} textAlign="center" color={colors.light} fontSize="1.1em">
+            No problems found.
+          </Box>
+        ) : (
+          props.problemsList
+            .slice((pageNumber - 1) * 20, pageNumber * 20)
+            .map((problem) => {
+              return (
+                <Problem
+                  key={problem.problem.title}
+                  handleDeleteProblem={handleDeleteProblem}
+                  problem={problem}
+                />
+              );
+            })
+        )}
       </Box>
       <Box padding={2} display={"flex"}>
         <Pagination
           onChange={(event, page) => setPageNumber(page)}
-          count={Math.ceil(props.constantProblemsList.length / 10)}
+          count={Math.ceil(props.problemsList.length / 20)}
           shape="rounded"
           sx={{ margin: "auto" }}
+          aria-label="Problems pagination"
         />
       </Box>
     </Box>
